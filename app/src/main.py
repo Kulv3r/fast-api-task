@@ -9,23 +9,14 @@ from src.api import routes
 from src.api.deps import get_redis_client
 from src.core.config import settings
 
-
 logger = logging.getLogger(__name__)
 
-
-tags_metadata = [
-    {
-        'name': 'health',
-        'description': 'Health check for api',
-    }
-]
 
 app = FastAPI(
     title='fastapi-backend',
     description='base project for fastapi backend',
     version=settings.VERSION,
     openapi_url=f'/{settings.VERSION}/openapi.json',
-    openapi_tags=tags_metadata,
 )
 
 
