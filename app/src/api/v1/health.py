@@ -5,8 +5,6 @@ from fastapi.responses import JSONResponse, Response
 router = APIRouter()
 
 
-@router.get('/ping', tags=['health'])
-def pong() -> Response:
-    # some async operation could happen here
-    # example: `data = await get_all_datas()`
-    return JSONResponse({'ping': 'pong!'})
+@router.get('/ping')
+async def ping() -> Response:
+    return JSONResponse({'ping': 'pong'})
