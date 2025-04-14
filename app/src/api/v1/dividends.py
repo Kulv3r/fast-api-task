@@ -7,12 +7,11 @@ from src.services.blockchain import get_tao_dividends
 router = APIRouter()
 
 
-@router.get('/tao_dividends')
+@router.get('/tao_dividends', dependencies=[Depends(verify_token)])
 async def tao_dividends(
         netuid: int = settings.DEFAULT_NETUID,
         hotkey: str = settings.DEFAULT_HOTKEY,
-        trade: bool = False,
-        dependencies=[Depends(verify_token)],
+        trade: bool = False
 ):
     dividends = await get_tao_dividends(netuid, hotkey)
 

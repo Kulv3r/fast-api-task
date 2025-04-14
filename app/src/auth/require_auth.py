@@ -1,14 +1,22 @@
-from fastapi import Request, HTTPException
-from functools import wraps
+from fastapi import HTTPException, Depends, status
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from src.core.config import settings
 
+security = HTTPBearer()
 
-def require_auth(route):
-    @wraps(route)
-    async def wrapper(request: Request, *args, **kwargs):
-        token = request.headers.get('Authorization')
-        if token != settings.AUTH_TOKEN:
-            raise HTTPException(status_code=401, detail='Unauthorized.')
-        return await route(request, *args, **kwargs)
-    return wrapper
+
+async def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    if not credentials:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Missing authorization header",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    if credentials.credentials != settings.AUTH_TOKEN:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
