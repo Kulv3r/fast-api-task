@@ -3,16 +3,17 @@ import logging
 from typing import List
 
 import requests
-from src.core.config import settings
 
+from src.core.config import settings
 
 logger = logging.getLogger(__name__)
 
 URL = 'https://apis.datura.ai/twitter'
-MAX_ATTEMPTS = 10
+# MAX_ATTEMPTS = 10
+MAX_ATTEMPTS = 2
 
 
-class TwitterError(Exception):
+class TwitterDaturaAPIError(Exception):
     pass
 
 
@@ -40,11 +41,14 @@ def search_twitter(netuid: int) -> List[str]:
         try:
             response = requests.get(URL, params=params, headers=headers)
             response.raise_for_status()
+            resp_json = response.json()
             break
         except (requests.RequestException, json.JSONDecodeError) as e:
             logger.warning(f'Failed to get data from Twitter via Datura API: {e}')
-    else:
-        raise TwitterError(f'Failed to get data from Twitter after {MAX_ATTEMPTS} attempts.')
+            if attempt + 1 == MAX_ATTEMPTS:
+                raise TwitterDaturaAPIError(
+                    f'Failed to get data from Twitter after {MAX_ATTEMPTS} attempts.'
+                ) from e
 
-    tweets = [t['text'] for t in response.json()]
+    tweets = [t['text'] for t in resp_json]
     return tweets
