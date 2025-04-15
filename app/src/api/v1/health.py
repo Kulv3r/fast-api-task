@@ -1,10 +1,10 @@
 from fastapi import APIRouter
-from fastapi.responses import JSONResponse, Response
 
+from src.schemas.ping import PingResponse
 
 router = APIRouter()
 
 
 @router.get('/ping')
-async def ping() -> Response:
-    return JSONResponse({'ping': 'pong'})
+async def ping() -> PingResponse:
+    return PingResponse(ping='pong')
