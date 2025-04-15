@@ -38,6 +38,7 @@ def search_twitter(netuid: int) -> List[str]:
         'count': 10,
     }
     for attempt in range(MAX_ATTEMPTS):
+        logger.info(f'Fetching recent tweets from Datura API...')
         try:
             response = requests.get(URL, params=params, headers=headers)
             response.raise_for_status()
@@ -51,4 +52,5 @@ def search_twitter(netuid: int) -> List[str]:
                 ) from e
 
     tweets = [t['text'] for t in resp_json]
+    logger.info(f'Got {len(tweets)} tweets from Datura API.')
     return tweets

@@ -1,22 +1,13 @@
+import logging
+
 from bittensor_wallet import Wallet
 
-from src.core.config import settings
-
-
-def init_wallet() -> Wallet:
-    """
-    Creates a wallet and stores keys at:
-        /Users/you/.bittensor/wallets/default/coldkey
-        /Users/you/.bittensor/wallets/default/coldkeypub.txt
-    """
-    wallet = Wallet()
-    wallet.regenerate_coldkey(
-        mnemonic=settings.DEFAULT_MNEMONIC,
-        coldkey_password=settings.WALLET_COLDKEY_PASSWORD,
-    )
-    return wallet
+logger = logging.getLogger(__name__)
 
 
 def get_wallet() -> Wallet:
-    """ Get default existing wallet. """
-    return Wallet().create()
+    """ Get a default wallet. """
+    logger.info(f'Loading default wallet..')
+    wallet = Wallet().create()
+    logger.info(f'Wallet {wallet} has been loaded.')
+    return wallet

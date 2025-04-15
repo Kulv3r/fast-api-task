@@ -1,7 +1,11 @@
+import logging
+
 from bittensor import AsyncSubtensor
 
 from src.core.config import settings
 from src.services.trade.wallet import get_wallet
+
+logger = logging.getLogger(__name__)
 
 
 def stake(netuid: int, hotkey: str, sentiment: int) -> None:
@@ -20,6 +24,7 @@ def stake(netuid: int, hotkey: str, sentiment: int) -> None:
 
     wallet = get_wallet()
     amount = calc_amount(sentiment)
+    logger.info(f'Trying to stake {amount=}...')
 
     with AsyncSubtensor(network=settings.DEFAULT_NET) as subtensor:
         if sentiment > 0:
@@ -27,12 +32,16 @@ def stake(netuid: int, hotkey: str, sentiment: int) -> None:
         else:
             stake_method = subtensor.unstake
 
-        stake_method(
+        result = stake_method(
             wallet=wallet,
             hotkey_ss58=hotkey,
             netuid=netuid,
             amount=amount,
         )
+        if result:
+            logger.info(f'Staking was successful.')
+        else:
+            logger.warning(f'Staking failed.')
 
 
 def calc_amount(sentiment: int) -> float:

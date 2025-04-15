@@ -84,6 +84,7 @@ def get_sentiment(tweets: List[str]) -> int:
         'temperature': TEMPERATURE,
     }
     for attempt in range(MAX_ATTEMPTS):
+        logger.info(f'Requesting sentiment analysis from Chutes.io API...')
         try:
             response = requests.post(URL, json=params, headers=headers)
             response.raise_for_status()
@@ -98,4 +99,5 @@ def get_sentiment(tweets: List[str]) -> int:
                 ) from e
 
     sentiment = resp_json_parsed['score']
+    logger.info(f'Got sentiment={sentiment}.')
     return sentiment
