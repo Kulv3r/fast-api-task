@@ -17,9 +17,7 @@ class Settings(BaseSettings):
 
     DEFAULT_HOTKEY: str = Field()
     DEFAULT_NETUID: int = Field()
-    DEFAULT_MNEMONIC: str = Field()
     DEFAULT_NET: str = Field(default='test')
-    WALLET_COLDKEY_PASSWORD: str = Field()
     AUTH_TOKEN: str = Field()
 
     POSTGRES_USER: str = Field(default='')
