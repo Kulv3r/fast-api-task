@@ -1,4 +1,4 @@
-# fastapi-backend
+# fast-api-task
 
 This is a test project, that implements an asynchronous API service that:
 
