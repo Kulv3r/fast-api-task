@@ -41,16 +41,15 @@ services:
     restart: always
     image: redis:latest
     ports:
-      - "6479:6379"
+      - "6379:6379"
     volumes:
       - redis-data:/data
 
   celery:
     restart: always
     build: app
-    command: celery --app=src worker --loglevel=info
+    command: celery --app=src.celery_tasks.celery_app worker --loglevel=info
     env_file:
       - .env
     depends_on:
-      - backend
       - redis

@@ -1,4 +1,4 @@
-from src import celery_app
+from src.celery_tasks.celery_app import celery_app
 from src.services.trade.trade import trade_extrinsic
 
 
