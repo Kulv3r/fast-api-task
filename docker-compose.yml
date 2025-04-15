@@ -1,5 +1,4 @@
 volumes:
-  base-data:
   db-data:
   redis-data:
 
@@ -10,7 +9,7 @@ services:
       - .env
     restart: always
     ports:
-      - '5431:5432'
+      - '5432:5432'
     volumes:
       - db-data:/var/lib/postgresql/data
 
@@ -24,17 +23,15 @@ services:
       args:
         env: ${ENV}
     ports:
-      - "8666:8000"
-    command: |
-        bash -c "
-        while !</dev/tcp/db/5432; do sleep 1; done;
-        gunicorn src.main:app --workers 1 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000 --log-level=debug --timeout=60 --reload"
+      - "8000:8000"
+#    command: gunicorn --config ./gunicorn_config.py src.main:app
+    command: uvicorn src.main:app --port 8000 --host 0.0.0.0
     depends_on:
       - db
+      - celery
     environment:
-      - PYTHONUNBUFFERED=0
+      - PYTHONUNBUFFERED=1
     volumes:
-      - base-data:/data
       - ./app/:/code
 
   redis:
